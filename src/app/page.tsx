@@ -5,7 +5,6 @@ import {
   Container,
   Typography,
   Dialog,
-  Grid,
   Box,
   TextField,
 } from "@mui/material";
@@ -117,23 +116,34 @@ export default function Home() {
         <UploadButton onUpload={handleUpload} />
 
         <Box mt={4}>
-          <Grid container spacing={4}>
-            {filteredImages.length === 0 ? (
-              <Typography variant="h6" color="textSecondary" sx={{ px: 2 }}>
-                No images found
-              </Typography>
-            ) : (
-              filteredImages.map((img) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={img.public_id}>
-                  <ImageCard
-                    image={img}
-                    onPreview={setSelectedImage}
-                    onDelete={handleDelete}
-                  />
-                </Grid>
-              ))
-            )}
-          </Grid>
+        <Box
+  sx={{
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    gap: 3, 
+    px: 1,
+  }}
+>
+  {filteredImages.map((img) => (
+    <Box
+      key={img.public_id}
+      sx={{
+        flex: "0 1 calc(25% - 24px)", 
+        boxSizing: "border-box",
+      }}
+    >
+      <ImageCard
+        image={img}
+        onPreview={setSelectedImage}
+        onDelete={handleDelete}
+      />
+    </Box>
+  ))}
+</Box>
+
+
+
         </Box>
 
         <Dialog
