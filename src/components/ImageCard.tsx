@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Button,
   Typography,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
@@ -39,27 +40,41 @@ export default function ImageCard({ image, onPreview, onDelete }: ImageCardProps
         sx={{
           borderRadius: 2,
           overflow: "hidden",
-          width: { xs: '100%', sm: 300 }, 
-          mx: "auto", 
+          width: { xs: '100%', sm: 300 },
+          mx: "auto",
           backgroundColor: "#fdedec",
-          boxShadow: 3, 
+          boxShadow: 3,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <CardMedia
-          component="img"
-          image={image.secure_url}
-          alt={image.title || "Uploaded"}
-          sx={{
-            height: { xs: 180, sm: 200 },
-            width: "100%",
-            objectFit: "cover",
-            cursor: "pointer",
-          }}
-          onClick={() => onPreview(image.secure_url)}
-        />
+        {/* Image Wrapper */}
+        <Box sx={{ width: "100%", height: 200, overflow: "hidden" }}>
+          <CardMedia
+            component="img"
+            image={image.secure_url}
+            alt={image.title || "Uploaded"}
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              cursor: "pointer",
+            }}
+            onClick={() => onPreview(image.secure_url)}
+          />
+        </Box>
 
         <CardContent>
-          <Typography variant="subtitle1" fontWeight="bold" bgcolor={"maroon"} color="white" px={2} borderRadius="16px" width={100}>
+          <Typography
+            variant="subtitle1"
+            fontWeight="bold"
+            bgcolor={"maroon"}
+            color="white"
+            px={2}
+            py={0.5}
+            borderRadius="16px"
+            width="fit-content"
+          >
             {image.title || "Untitled"}
           </Typography>
         </CardContent>
