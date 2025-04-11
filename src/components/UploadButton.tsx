@@ -6,7 +6,7 @@ interface Image {
   public_id: string;
   secure_url: string;
   title: string;
-  tags: string[];
+  tags: string[]; 
 }
 
 interface UploadButtonProps {
@@ -17,7 +17,6 @@ export default function UploadButton({ onUpload }: UploadButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [tags, setTags] = useState("");   
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -29,7 +28,16 @@ export default function UploadButton({ onUpload }: UploadButtonProps) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
 
-      const title = file.name.replace(/\.[^/.]+$/, "");  
+      // Validate that the file is an image
+      if (!file.type.startsWith("image/")) {
+        setError("Please upload only image files.");
+        setOpenSnackbar(true);
+        setLoading(false);
+        return;
+      }
+
+      // Generate title based on the file name without extension
+      const title = file.name.replace(/\.[^/.]+$/, ""); 
 
       try {
         const result = await uploadImageToCloudinary(file);
@@ -37,12 +45,11 @@ export default function UploadButton({ onUpload }: UploadButtonProps) {
         const image: Image = {
           public_id: result.public_id,
           secure_url: result.secure_url,
-          title: title,  
-          tags: tags ? tags.split(",").map(tag => tag.trim()) : [], 
+          title: title, 
+          tags: [], 
         };
 
         onUpload(image); 
-        setTags("");  
       } catch (error) {
         console.error("Upload failed", error);
         setError("Failed to upload image. Please try again.");
@@ -51,11 +58,12 @@ export default function UploadButton({ onUpload }: UploadButtonProps) {
     }
 
     setLoading(false);
-    e.target.value = "";
+    e.target.value = ""; 
   };
 
   return (
     <>
+      {/* Upload Button */}
       <Button
         variant="contained"
         component="label"
@@ -76,6 +84,7 @@ export default function UploadButton({ onUpload }: UploadButtonProps) {
         <input type="file" hidden multiple onChange={handleUpload} />
       </Button>
 
+      {/* Snackbar for error message */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
